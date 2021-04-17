@@ -34,7 +34,7 @@ def upload_file():
       for row in lst:
           sheet_destination.append(row)
 
-      destination.save("final_with_header.xlsx")
+      destination.save("final.xlsx")
 
       #return 'file uploaded successfully'
       return render_template("download.html")
@@ -59,15 +59,14 @@ def remove():
 # removes the excel files from static/csv folder
 @app.route("/remove_exl")
 def remove_exl():
-    os.remove("final_with_header.xlsx")
+    os.remove("final.xlsx")
     return redirect("/")
 
 # downlods the customized excel file
 @app.route('/download')
-def downloadFile ():
-    #For windows you need to use drive name [ex: F:/Example.pdf]
-    path = "final_with_header.xlsx"
-    return send_file(path, as_attachment=True)
+def downloadFile():
+    path = "final.xlsx"
+    return send_file(path, as_attachment=True, cache_timeout=0)
 
 if __name__ == "__main__":
     app.run(debug=True)
