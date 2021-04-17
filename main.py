@@ -46,6 +46,7 @@ def download(filename):
     # Returning file from appended path
     return send_from_directory(directory=uploads, filename=filename)
 
+# removes the csv files from static/csv folder
 @app.route('/remove_all_csv')
 def remove():
     import os
@@ -55,11 +56,13 @@ def remove():
     # os.remove("final_with_header.xlsx") 
     return redirect("/")
 
+# removes the excel files from static/csv folder
 @app.route("/remove_exl")
 def remove_exl():
     os.remove("final_with_header.xlsx")
     return redirect("/")
 
+# downlods the customized excel file
 @app.route('/download')
 def downloadFile ():
     #For windows you need to use drive name [ex: F:/Example.pdf]
