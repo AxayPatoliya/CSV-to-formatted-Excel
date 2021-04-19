@@ -33,7 +33,6 @@ testpath==0.4.4
 tornado==6.1
 traitlets==5.0.5
 twilio==6.53.0
-ufw==0.36
 urllib3==1.26.3
 usb-creator==0.3.7
 virtualenv==20.0.29+ds
