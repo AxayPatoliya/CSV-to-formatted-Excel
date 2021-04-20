@@ -23,7 +23,7 @@ def upload_file():
       file = request.files['file']
       filename = secure_filename(file.filename)
       file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-      
+
       # converting the file into customize form
       destination = openpyxl.load_workbook("fill-3.xlsx")
       sheet_destination = destination.active
@@ -53,7 +53,7 @@ def remove():
     import shutil
     shutil.rmtree('static/csv')
     os.mkdir('static/csv')
-    # os.remove("final_with_header.xlsx") 
+    # os.remove("final_with_header.xlsx")
     return redirect("/")
 
 # removes the excel files from static/csv folder
@@ -69,4 +69,4 @@ def downloadFile():
     return send_file(path, as_attachment=True, cache_timeout=0)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
