@@ -64,8 +64,11 @@ def remove():
 # removes the excel files from static/csv folder
 @app.route("/remove_exl")
 def remove_exl():
-    os.remove("final.xlsx")
-    return redirect("/")
+    try:
+        os.remove("final.xlsx")
+        return redirect("/")
+    except FileNotFoundError:
+        return("Everything is up to date!")
 
 # downlods the customized excel file
 @app.route('/download')
@@ -75,63 +78,72 @@ def downloadFile():
 
 @app.route('/plot')
 def plot():
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    from matplotlib.figure import Figure
-    file_name = session.get('file-name')
-    df = pd.read_csv('static/csv/'+file_name)
-    df.drop('Seq#', axis=1, inplace=True)
-    df.drop('V.THD. %', axis=1, inplace=True)
-    df.drop('I.THD. %', axis=1, inplace=True)
-    df.drop('P.F.', axis=1, inplace=True)
+    try:
 
-    ref = []
-    for i in range(len(df)):
-        ref.append(i)
+        import pandas as pd
+        import matplotlib.pyplot as plt
+        from matplotlib.figure import Figure
+        file_name = session.get('file-name')
+        df = pd.read_csv('static/csv/'+file_name)
+        df.drop('Seq#', axis=1, inplace=True)
+        df.drop('V.THD. %', axis=1, inplace=True)
+        df.drop('I.THD. %', axis=1, inplace=True)
+        df.drop('P.F.', axis=1, inplace=True)
 
-    test = df['TEST']
-    product = df['PRODUCT']
-    ac_voltage = df['AC VOLTAGE']
-    ac_current = df['AC CURRENT']
-    ac_watt = df['AC WATT']
-    dc_voltage = df['DC VOLTAGE']
-    dc_current = df['DC CURRENT']
-    dc_power = df['DC POWER']
-    efficiency = df['EFFICIENCY']
-    pcb_temp = df['PCB TEMP']
-    junc_temp = df['JUNC TEMP']
-    housing_temp = df['HOUSING TEMP']
-    xmer_temp = df["X'MER TEMP"]
-    room_temp = df['ROOM TEMP']
-    tap = df['TAP']
-    recipe = df['RECIPE']
+        ref = []
+        for i in range(len(df)):
+            ref.append(i)
 
-
-    plt.plot(ref, test)
-    plt.plot(ref, product)
-    plt.plot(ref, ac_voltage)
-    plt.plot(ref, ac_current)
-    plt.plot(ref, ac_watt)
-    plt.plot(ref, dc_voltage)
-    plt.plot(ref, dc_current)
-    plt.plot(ref, dc_power)
-    plt.plot(ref, efficiency)
-    plt.plot(ref, pcb_temp)
-    plt.plot(ref, junc_temp)
-    plt.plot(ref, housing_temp)
-    plt.plot(ref, xmer_temp)
-    plt.plot(ref, room_temp)
-    plt.plot(ref, tap)
-    plt.plot(ref, recipe)
+        # test = df['TEST']
+        # product = df['PRODUCT']
+        ac_voltage = df['AC VOLTAGE']
+        ac_current = df['AC CURRENT']
+        ac_watt = df['AC WATT']
+        dc_voltage = df['DC VOLTAGE']
+        dc_current = df['DC CURRENT']
+        dc_power = df['DC POWER']
+        efficiency = df['EFFICIENCY']
+        pcb_temp = df['PCB TEMP']
+        junc_temp = df['JUNC TEMP']
+        housing_temp = df['HOUSING TEMP']
+        xmer_temp = df["X'MER TEMP"]
+        room_temp = df['ROOM TEMP']
+        # tap = df['TAP']
+        # recipe = df['RECIPE']
 
 
-    plt.legend(['Test', 'Product', 'AC Voltage', 'AC Current', 'AC Watt', 'DC Voltage', 
-            'DC Current', 'DC Power', 'Efficiency', 'PCB Temp.', 'Junc Temp', 'Housing  Temp', 'Xmer Temp', 'Room Temp',
-            'Tap', 'Recipe'], fontsize="xx-small")
-    plt.plot()
-    plt.savefig('static/img/plot.png')
+        # plt.plot(ref, test)
+        # plt.plot(ref, product)
+        plt.plot(ref, ac_voltage)
+        plt.plot(ref, ac_current)
+        plt.plot(ref, ac_watt)
+        plt.plot(ref, dc_voltage)
+        plt.plot(ref, dc_current)
+        plt.plot(ref, dc_power)
+        plt.plot(ref, efficiency)
+        plt.plot(ref, pcb_temp)
+        plt.plot(ref, junc_temp)
+        plt.plot(ref, housing_temp)
+        plt.plot(ref, xmer_temp)
+        plt.plot(ref, room_temp)
+        # plt.plot(ref, tap)
+        # plt.plot(ref, recipe)
 
-    return render_template('plot.html', url='static/img/plot.png')
+
+        # plt.legend(['Test', 'Product', 'AC Voltage', 'AC Current', 'AC Watt', 'DC Voltage', 
+        #         'DC Current', 'DC Power', 'Efficiency', 'PCB Temp.', 'Junc Temp', 'Housing  Temp', 'Xmer Temp', 'Room Temp',
+        #         'Tap', 'Recipe'], fontsize="xx-small")
+        plt.legend(['AC Voltage', 'AC Current', 'AC Watt', 'DC Voltage', 
+                'DC Current', 'DC Power', 'Efficiency', 'PCB Temp.', 'Junc Temp', 'Housing  Temp', 'Xmer Temp', 'Room Temp'], fontsize="xx-small")
+        plt.plot()
+        plt.savefig('static/img/plot.png')
+
+        return render_template('plot.html', url='static/img/plot.png')
+    
+    except KeyError:
+        return "Please upload the CSV with valid column values!"
+    except FileNotFoundError:
+        return "Please upload a valid CSV file first!"
 
 if __name__ == "__main__":
     app.run(debug=True)
